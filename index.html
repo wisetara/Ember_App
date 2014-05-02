@@ -72,10 +72,10 @@
       {{#each}}
         <li class='row'>
           <img {{bind-attr src='image'}} class='img-thumbnail col-md-5'/>
-          <div class='col-sm-7'>
+            <div class='col-sm-7'>
             <h2>{{title}}</h2>
             <p class='product-description'>{{description}}</p>
-            <p><button class='btn btn-success'>Buy for ${{price}}</button></p>
+            <p>{{#link-to 'product' this class='btn btn-success' tagName='button'}}Buy for ${{price}}{{/link-to}}</p>
           </div>
         </li>
       {{/each}}
@@ -84,6 +84,7 @@
 
     <script type='text/x-handlebars' data-template-name='product'>
       <h2>{{title}}</h2>
+      <img {{bind-attr src='image' alt='title'}} class='img-thumbnail col-md-5'/>
       <p>{{description}}</p>
       <p>Buy for ${{price}}</p>
     </script>
@@ -93,14 +94,20 @@
       <ul class='list-unstyled'>
       {{#each}}
         <li class='row'>
-          <img {{bind-attr src='avatar'}} class='img-thumbnail col-md-5'/>
+          <img {{bind-attr src='avatar' alt='name'}} class='img-thumbnail col-md-5'/>
           <div class='col-sm-7'>
-            <h2>{{name}}</h2>
+            <h2>{{#link-to 'contact' this}}{{name}}{{/link-to}}</h2>
             <p class='product-description'>{{about}}</p>
           </div>
         </li>
       {{/each}}
       </ul>
+    </script>
+
+    <script type='text/x-handlebars' data-template-name='contact'>
+      <h2>{{name}}</h2>
+      <p>{{about}}</p>
+      <img {{bind-attr src='avatar' alt='name'}}/>
     </script>
 
     <script src="js/libs/jquery-1.10.2.js"></script>

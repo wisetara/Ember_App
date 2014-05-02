@@ -6,14 +6,15 @@ App.Router.map(function() {
   this.route('credits', { path: '/thanks' });
   this.route('about');
   this.resource('products');
-  this.resource('product', {path: '/products/:title'});
+  this.resource('product', { path: '/products/:title' });
   this.resource('contacts');
+  this.resource('contact', { path: '/contact/:name '});
 });
 
 //This is often defined by Ember, and isn't always defined.
 //CONTROLLERS are often created by Ember.
 App.IndexController = Ember.Controller.extend({
-	productsCount: 6,
+	productsCount: 2,
 	logo: 'images/logo.png',
 	time: function() {
 		return (new Date()).toDateString()
@@ -47,6 +48,12 @@ App.ContactsRoute = Ember.Route.extend({
 	}
 });
 
+App.ContactRoute = Ember.Route.extend({
+	model: function(params) {
+		return App.CONTACTS.findBy('name', params.name);
+	}
+});
+
 //MODELS
 App.PRODUCTS = [
 	{
@@ -63,4 +70,16 @@ App.PRODUCTS = [
 		isOnSale: false,
 		image: 'images/kindling.png'
 	}
+];
+App.CONTACTS = [
+  {
+    name: "Flint Edwards",
+    avatar: 'images/contacts/flint.png',
+    about: 'Whatever'
+  },
+  {
+    name: "Kindling Smith",
+    avatar: 'images/contacts/kindling.png',
+    about: 'Whatever'
+  }
 ];
