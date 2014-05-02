@@ -5,3 +5,24 @@ App.IndexController = Ember.Controller.extend({
     return (new Date()).toDateString();
   }.property()
 });
+
+<script type='handlebars' data-template-name='credits'>
+  <h2>Products</h2>
+  {{#each}}
+  <h3>{{title}}
+  <img {{bind-attr src='image'}}/>
+  {{/each}}
+</script>
+
+App.CONTACTS = [
+  {
+    name: "Flint Edwards",
+    avatar: 'images/contacts/flint.png'
+    about: 'Whatever'
+  },
+  {
+    name: "Kindling Smith",
+    avatar: 'images/contacts/kindling.png'
+    about: 'Whatever'
+  }
+];
