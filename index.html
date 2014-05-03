@@ -67,19 +67,24 @@
     </script>
 
     <script type='text/x-handlebars' data-template-name='products'>
-      <h1>Products</h1>
-      <ul class='list-unstyled'>
-      {{#each}}
-        <li class='row'>
-          <img {{bind-attr src='image'}} class='img-thumbnail col-md-5'/>
-            <div class='col-sm-7'>
-            <h2>{{title}}</h2>
-            <p class='product-description'>{{description}}</p>
-            <p>{{#link-to 'product' this class='btn btn-success' tagName='button'}}Buy for ${{price}}{{/link-to}}</p>
-          </div>
-        </li>
-      {{/each}}
-      </ul>
+    <div class='row'>
+      <div class='col-sm-3'>
+        <div class='list-group'>
+          {{#each}}
+            {{#link-to 'product' this classNames='list-group-item'}}
+              {{title}}
+            {{/link-to}}
+          {{/each}}
+        </div>
+      </div>
+      <div class='col-sm-9'>
+        {{outlet}}
+      </div>
+    </div>
+    </script>
+
+    <script type='text/x-handlebars' data-template-name='products/index'>
+      <p class='text-muted'>Choose a product from those on the left!</p>
     </script>
 
     <script type='text/x-handlebars' data-template-name='product'>
