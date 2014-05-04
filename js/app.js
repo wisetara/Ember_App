@@ -2,14 +2,16 @@ App = Ember.Application.create({
 	LOG_TRANSITIONS: true
 });
 
+App.ApplicationAdapter = DS.FixtureAdapter.extend();
+
 App.Router.map(function() {
   this.route('credits', { path: '/thanks' });
-  this.route('about');
   this.resource('products', function() {
-  	this.resource('product', { path: '/products/:title' });
+  	this.resource('product', { path: '/:product_id' });
   });
-  this.resource('contacts');
-  this.resource('contact', { path: '/contact/:name '});
+  this.resource('contacts', function() {
+  	this.resource('contact', { path: '/:contact_id '});
+  });
 });
 
 //This is often defined by Ember, and isn't always defined.
@@ -22,7 +24,7 @@ App.IndexController = Ember.Controller.extend({
 	}.property()
 });
 
-App.AboutController = Ember.Controller.extend({
+App.ContactsIndexController = Ember.Controller.extend({
 	contactName: 'Anostagia',
 	avatar: 'images/avatar.png',
 	open: function() {
@@ -33,52 +35,72 @@ App.AboutController = Ember.Controller.extend({
 //ROUTES are often created by Ember.
 App.ProductsRoute = Ember.Route.extend({
 	model: function() {
-		return App.PRODUCTS;
+		return this.store.findAll('product');
 	}
 });
 
+//THIS COULD BE DELETED! EMBER IS SMART!
 App.ProductRoute = Ember.Route.extend({
 	model: function(params) {
-		return App.PRODUCTS.findBy('title', params.title);
+		return this.store.find('product', params.product_id);
 	}
 });
 
 App.ContactsRoute = Ember.Route.extend({
 	model: function() {
-		return App.CONTACTS;
+		return this.store.findAll('contact');
 	}
 });
 
 App.ContactRoute = Ember.Route.extend({
 	model: function(params) {
-		return App.CONTACTS.findBy('name', params.name);
+		return this.store.find('contact', params.contact_id);
 	}
 });
 
 //MODELS
-App.PRODUCTS = [
-	{
-		title: "Flint",
-		price: 99,
-		description: "Flint is...",
-		isOnSale: true,
-		image: 'images/flint.png'
-	},
-	{
-		title: "Kindling",
-		price: 249,
-		description: "Easily...",
-		isOnSale: false,
-		image: 'images/kindling.png'
-	}
-];
-App.CONTACTS = [
+App.Product = DS.Model.extend({
+	title: DS.attr('string'),
+	price: DS.attr('number'),
+	description: DS.attr('string'),
+	isOnSale: DS.attr('boolean'),
+	image: DS.attr('string')
+});
+
+App.Product.FIXTURES = [
   {
+    id: 1,
+    title: "Flint",
+    price: 99,
+    description: "Flint is...",
+    isOnSale: true,
+    image: 'images/flint.png'
+  },
+  {
+    id: 2,
+    title: "Kindling",
+    price: 249,
+    description: "Easily...",
+    isOnSale: false,
+    image: 'images/kindling.png'
+  }
+];
+
+App.Contact = DS.Model.extend({
+	name: DS.attr(),
+	avatar: DS.attr(),
+	about: DS.attr()
+});
+
+App.Contact.FIXTURES = [
+  {
+    id: 1,
     name: "Flint Edwards",
     avatar: 'images/contacts/flint.png',
     about: 'Whatever'
   },
   {
+    id: 2,
     name: "Kindling Smith",
     avatar: 'images/contacts/kindling.png',
     about: 'Whatever'
