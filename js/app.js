@@ -53,6 +53,14 @@ App.ProductsController = Ember.ArrayController.extend({
   //you only need to sort here because we're using fixtures. Otherwise, sort in the route.
 });
 
+App.ReviewsController = Ember.ArrayController.extend({
+  sortProperties: ['reviewedAt'],
+  sortAscending: false
+});
+
+App.ContactProductsController = Ember.ArrayController.extend({
+  sortProperties: ['title']
+});
 
 //This is often defined by Ember, and isn't always defined.
 //ROUTES are often created by Ember.
@@ -113,6 +121,28 @@ App.ContactRoute = Ember.Route.extend({
 	model: function(params) {
 		return this.store.find('contact', params.contact_id);
 	}
+});
+
+//COMPONENTS
+App.ProductDetailsComponent = Ember.Component.extend({
+  reviewsCount: Ember.computed.alias('product.reviews.length'),
+  hasReviews: function() {
+    return this.get('reviewsCount') > 0;
+  }.property('reviewsCount')
+});
+
+App.ContactDetailsComponent = Ember.Component.extend({
+  productsCount: Ember.computed.alias('contact.products.length'),
+  isProductive: function(){
+    return this.get('productsCount') > 3;
+  }.property('productsCount')
+});
+
+//VIEWS
+App.ProductView = Ember.View.extend({
+  classNames: ['row'],
+  classNameBindings: ['isOnSale'],
+  isOnSale: Ember.computed.alias('controller.isOnSale')
 });
 
 //MODELS

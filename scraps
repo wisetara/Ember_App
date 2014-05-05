@@ -70,3 +70,11 @@ App.ProductsIndexController = Ember.ArrayController.extend({
     });
   }.property('@each.price')
 });
+
+{{product-details product=this tagName='li' classNames='row'}}
+//optionally, one can do this (if things are always laid out the same):
+
+App.ProductDetailsComponent = Ember.Component.extend({
+  tagName: 'li',
+  classNames: ['row']
+});
