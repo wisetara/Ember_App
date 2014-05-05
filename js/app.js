@@ -4,7 +4,7 @@ App = Ember.Application.create({
 
 App.ApplicationAdapter = DS.FixtureAdapter.extend();
 
-//To use a RESTful server instead of fixtures, 
+//To use a RESTful server instead of fixtures,
 //host the info in JSON style on a server or elsewhere, and use
 //App.ApplicationAdapter = DS.RESTAdapter.extend();
 
@@ -12,6 +12,8 @@ App.Router.map(function() {
   this.route('credits', { path: '/thanks' });
   this.resource('products', function() {
   	this.resource('product', { path: '/:product_id' });
+    this.route('onsale');
+    this.route('deals');
   });
   this.resource('contacts', function() {
   	this.resource('contact', { path: '/:contact_id '});
@@ -20,27 +22,78 @@ App.Router.map(function() {
 
 //This is often defined by Ember, and isn't always defined.
 //CONTROLLERS are often created by Ember.
-App.IndexController = Ember.Controller.extend({
-	productsCount: 2,
+App.IndexController = Ember.ArrayController.extend({
+	productsCount: function() {
+    return this.get('length');
+  }.property('length'),//this asks the controller to keep an eye on things.
+  //A shorthand way of doing the above: products.Count: Ember.computed.alias('length')
 	logo: 'images/logo.png',
 	time: function() {
 		return (new Date()).toDateString()
-	}.property()
+	}.property(),
+  onSale: function() {
+    //return this.filter(function(product) {
+      //return product.get('isOnSale').slice(0,3);
+      return this.filterBy('isOnSale').slice(0,3);
+    //});
+  }.property('@each.isOnSale')
 });
 
-App.ContactsIndexController = Ember.Controller.extend({
-	contactName: 'Anostagia',
-	avatar: 'images/avatar.png',
-	open: function() {
-		return ((new Date()).getDay() === 0) ? "Closed" : "Open";
-	}.property()
+App.ContactsController = Ember.ArrayController.extend({
+  sortProperties: ['name']
 });
+
+App.ContactsIndexController = Ember.ObjectController.extend({
+  contactName: Ember.computed.alias('name')
+});
+
+App.ProductsController = Ember.ArrayController.extend({
+  sortProperties: ['title'],
+  sortAscending: true //you don't need this line unless you want it to be false! Also,
+  //you only need to sort here because we're using fixtures. Otherwise, sort in the route.
+});
+
+
 //This is often defined by Ember, and isn't always defined.
 //ROUTES are often created by Ember.
+App.IndexRoute = Ember.Route.extend({
+  model: function() {
+    return this.store.findAll('product');
+  }
+});
+
 App.ProductsRoute = Ember.Route.extend({
 	model: function() {
 		return this.store.findAll('product');
+    //If not using fixtures, you can sort here:
+    //return this.store.find('product', { order: 'title'});
 	}
+});
+
+App.ProductsOnsaleRoute = Ember.Route.extend({
+  model: function() {
+    return this.modelFor('products').filterBy('isOnSale');
+  }
+});
+
+App.ProductsDealsRoute = Ember.Route.extend({
+  model: function(){
+    return this.modelFor('products').filter(function(product) {
+      return product.get('price') < 500;
+    });
+  }
+});
+
+App.ProductsIndexRoute = Ember.Route.extend({
+  model: function() {
+    return this.store.findAll('product');
+  }
+});
+
+App.ContactsIndexRoute = Ember.Route.extend({
+  model: function() {
+    return this.store.find('contact', 2);
+  }
 });
 
 //THIS COULD BE DELETED! EMBER IS SMART!
@@ -88,7 +141,7 @@ App.Review = DS.Model.extend({
 
 /*FIXTURES
 //In a RESTful server situation, these would be in a JSON "Products" file (perhaps)
-//And the syntax would be 
+//And the syntax would be
 { "products": [
     {
       "id": 1,
@@ -147,7 +200,7 @@ App.Contact.FIXTURES = [
 ];
 
 App.Review.FIXTURES = [
-  { 
+  {
     id: 100,
     product: 1,
     text: "Started a fire in no time!"
