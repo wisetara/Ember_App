@@ -87,10 +87,29 @@
     </script>
 
     <script type='text/x-handlebars' data-template-name='product'>
-      <h2>{{title}}</h2>
-      <img {{bind-attr src='image' alt='title'}} class='img-thumbnail col-md-5'/>
-      <p>{{description}}</p>
-      <p>Buy for ${{price}}</p>
+      <div class='row'>
+        <div class='col-sm-7'>
+          <h2>{{title}}</h2>
+          <h3 class='text-success'>${{price}}</h3>
+          <p class='text=muted'>{{description}}</p>
+          <p> Finely crafted by: {{#link-to 'contact' crafter}}{{crafter.name}}{{/link-to}}</p>
+        </div>
+        <div class='col-sm-5'>
+          <img {{bind-attr src='image' alt='title'}} class='img-thumbnail col-md-5'/>
+        </div>
+      </div>     
+      <div>
+        <h3>Reviews</h3>
+        <ul>
+          {{#each review in reviews}}
+            <li>{{review.text}}</li>
+          {{else}}
+            <li><p class='text-muted'>
+              <em>No reviews yet. Be the first to write one!</em>
+            </p></li>
+          {{/each}}
+        </ul>
+      </div>  
     </script>
 
     <script type='text/x-handlebars' data-template-name='contacts'>
@@ -111,9 +130,21 @@
   </script>
 
     <script type='text/x-handlebars' data-template-name='contact'>
-      <h2>{{name}}</h2>
-      <p>{{about}}</p>
-      <img {{bind-attr src='avatar' alt='name'}}/>
+      <div class='row'>
+        <div class='col-sm-5'>
+          <img {{bind-attr src='avatar' alt='name'}} class='img-thumbnail img-rounded'/>
+        </div>
+        <div class='col-sm-7'>
+          <h2>{{name}}</h2>
+          <p>{{about}}</p>
+          <h3>Products</h3>
+          <ul>
+          {{#each products}}
+            <li>{{#link-to 'product' this}}{{title}}{{/link-to}}</li>
+          {{/each}}
+          </ul>
+        </div>
+      </div>
     </script>
 
     <script src="js/libs/jquery-1.10.2.js"></script>

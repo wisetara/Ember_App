@@ -50,3 +50,8 @@ App.IndexController = Ember.Controller.extend({
 this.route('about');
 <li>{{#link-to 'about'}}About{{/link-to}}</li>
 
+    <script type='text/x-handlebars' data-template-name='contact'>
+      <h2>{{name}}</h2>
+      <p>{{about}}</p>
+      <img {{bind-attr src='avatar' alt='name'}}/>
+    </script>
